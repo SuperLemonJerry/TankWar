@@ -77,7 +77,7 @@ public class MyTankGame extends JFrame implements ActionListener {
 		if (mc == null){
 			this.createMyStartPanel();
 		}else {
-			this.createTankClient(MyTankGame.SINGLE_GAME);
+			this.createTankClient(MyTankGame.SINGLE_GAME,"edit.tkm");
 		}
 		
 	}	
@@ -126,7 +126,7 @@ public class MyTankGame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("NewGame")){				
 			this.removeMyStartPanel(myStartPanel, myStartPanel);
-			this.createTankClient(MyTankGame.SINGLE_GAME);
+			this.createTankClient(MyTankGame.SINGLE_GAME,"edit.tkm");
 		}
 		else if (e.getActionCommand().equals("Exit")){
 			System.exit(0);
@@ -175,7 +175,7 @@ public class MyTankGame extends JFrame implements ActionListener {
 		this.remove(thisJpanel);
 	}
 	
-	public void createTankClient(int gameType){
+	public void createTankClient(int gameType,String mapName){
 		
 		this.setSize(GAME_WIDTH, GAME_HEIGHT);
 		

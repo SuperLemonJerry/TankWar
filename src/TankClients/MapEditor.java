@@ -9,14 +9,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.*;
+
+import com.sun.java.swing.plaf.windows.resources.windows;
 
 import dataclass.Barrier;
 import dataclass.Base;
 import dataclass.Forest;
 import dataclass.Rivers;
 import dataclass.Wall;
+
 
 public class MapEditor extends JPanel implements MouseListener,
 		MouseMotionListener, KeyListener {
@@ -72,6 +76,8 @@ public class MapEditor extends JPanel implements MouseListener,
 	Forest f = null;
 	Wall w = null;
 	Rivers r = null;
+	private JTextField mapNameText;
+	private JLabel tipsLab;
 
 	public MapEditor(MyTankGame myTankGame) {
 		this.myTankGame = myTankGame;
@@ -543,9 +549,26 @@ public class MapEditor extends JPanel implements MouseListener,
 		}
 	}
 
-	public void save() {
+	private Vector<String> listMaps() {
+		
+		File f = new File("src" + File.separator + "maps");		
+		String[] ss = f.list();		
+		Vector<String> v = new Vector<String>();
+		
+		for (String s : ss) {		
+			if (s.matches(".*(\\.tkm)$")) {
+				v.add(s);
+			}
+		}
+			
+		return v;
+	}
+	
+	private void saveToMap(String mapName) {
+		
+		System.out.println(mapName);
 		FileOutputStream fos = null;
-		File f = new File("src//maps//edit.tkm");
+		File f = new File("src"+File.separator+"maps"+File.separator+mapName);
 		if (!f.exists()){
 			try {
 				f.createNewFile();
@@ -596,16 +619,78 @@ public class MapEditor extends JPanel implements MouseListener,
 			System.out.println("地图保存失败!");
 
 		}
-		System.out.println("地图保存完成!");
 		try {
 			dos.flush();
 			dos.close();
 		} catch (IOException e) {
 			System.out.println("file close error!");
 		}
+	}
+	
+	public void save() {
+		
+		JDialog jd = new JDialog(myTankGame,"",true);
+		jd.setBounds(500, 180, 400, 300);
+		jd.setLayout(null);
+		
+		JLabel jlabel_3 = new JLabel("全部地图");
+		jlabel_3.setBounds(30,20, 100, 30);
+		jd.add(jlabel_3);
+		JComboBox<String> maps = new JComboBox<String>(this.listMaps());
+		maps.setBounds(140, 20, 200, 30);
+		jd.add(maps);
+		
+		JLabel jlabel_4 = new JLabel("新地图名字");
+		jlabel_4.setBounds(30,70, 100, 30);
+		jd.add(jlabel_4);
+		
+		mapNameText = new JTextField();
+		mapNameText.setBounds(140,70, 100, 30);
+		jd.add(mapNameText);
+		
+		JLabel jlabel_5 = new JLabel(".tkm");
+		jlabel_5.setBounds(250,70, 50, 30);
+		jd.add(jlabel_5);
+		
+		JLabel jlabel_6 = new JLabel("注意：edit.tkm为联机地图请勿删除");
+		jlabel_6.setFont(new Font("", Font.BOLD, 14));
+		jlabel_6.setForeground(Color.RED);
+		jlabel_6.setBounds(30,120, 300, 30);
+		jd.add(jlabel_6);
+		
+		JButton jButton = new JButton("确认保存");
+		jButton.setBounds(100, 170, 150, 30);
+		jButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				if (!mapNameText.getText().equals("")) {
+					saveToMap(mapNameText.getText().trim()+".tkm");
+					tipsLab.setText("提示：地图保存完成！");
+				}else {
+					tipsLab.setText("提示：新地图输入名字不正确");
+				}
+			
+				
+			}
+		});
+		jd.add(jButton);
+		
+		tipsLab = new JLabel("提示：地图尚未保存");
+		tipsLab.setFont(new Font("", Font.BOLD, 14));
+		tipsLab.setForeground(Color.RED);
+		tipsLab.setBounds(80,220, 300, 30);
+		jd.add(tipsLab);
+		
+		jd.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		
+		jd.setVisible(true);
+		
+
 
 	}
-
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 
