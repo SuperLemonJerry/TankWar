@@ -1,4 +1,4 @@
-package TankClients;
+package visualclass;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -13,8 +13,11 @@ import java.util.Vector;
 
 import javax.swing.*;
 
-import com.sun.java.swing.plaf.windows.resources.windows;
-
+import TankClients.GameObject;
+import TankClients.MyTankGame;
+import TankClients.PaintThread;
+import TankClients.Tank;
+import TankClients.TankClient;
 import dataclass.Barrier;
 import dataclass.Base;
 import dataclass.Forest;
@@ -22,8 +25,9 @@ import dataclass.Rivers;
 import dataclass.Wall;
 
 
-public class MapEditor extends JPanel implements MouseListener,
+public class MapEditor extends GamePanel implements MouseListener,
 		MouseMotionListener, KeyListener {
+		
 	private int mouseX;
 	private int mouseY;
 	private int startX;
@@ -34,7 +38,6 @@ public class MapEditor extends JPanel implements MouseListener,
 	private int kind;// 1и╜аж 2г╫ 3╨с
 	private int clickCount = 0;
 
-	private MyTankGame myTankGame = null;
 	private List<Wall> walls = new ArrayList<Wall>();
 	private List<Forest> forests = new ArrayList<Forest>();
 	private List<Rivers> rivers = new ArrayList<Rivers>();
@@ -80,11 +83,11 @@ public class MapEditor extends JPanel implements MouseListener,
 	private JLabel tipsLab;
 
 	public MapEditor(MyTankGame myTankGame) {
-		this.myTankGame = myTankGame;
+		super(myTankGame);
+		this.panelType = GameUI.MAP_EDITOR_PANEL;
+		
+		this.createPanel();
 
-		this.setBackground(Color.BLACK);
-		this.setSize(MyTankGame.FRAME_WIDTH, MyTankGame.FRAME_HEIGHT);
-		this.setVisible(true);
 		new Thread(new PaintThread(this)).start();
 
 		if (Tank.HEIGHT >= Tank.WIDTH) {
@@ -781,6 +784,33 @@ public class MapEditor extends JPanel implements MouseListener,
 	@Override
 	public void keyTyped(KeyEvent e) {
 
+	}
+
+	@Override
+	public void createPanel() {
+	
+
+		this.setBackground(Color.BLACK);
+		myTankGame.setSize(MyTankGame.FRAME_WIDTH, MyTankGame.FRAME_HEIGHT);
+		
+		
+		myTankGame.addMouseListener(this);
+		myTankGame.addMouseMotionListener(this);
+		myTankGame.addKeyListener(this);	
+		
+		myTankGame.add(this);
+		this.setVisible(true);
+		
+	}
+
+	@Override
+	public void removePanel() {
+		myTankGame.removeMouseListener(this);
+		myTankGame.removeMouseMotionListener(this);
+		myTankGame.removeKeyListener(this);
+		myTankGame.remove(this);
+		
+		
 	}
 
 }

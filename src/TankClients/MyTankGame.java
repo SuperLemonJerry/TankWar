@@ -7,6 +7,9 @@ import javax.swing.*;
 import visualclass.AloneGameSetPanel;
 import visualclass.ConnectShell;
 import visualclass.GameOverPanel;
+import visualclass.GamePanel;
+import visualclass.GameUI;
+import visualclass.MapEditor;
 import visualclass.MyStartPanel;
 import java.awt.GridLayout;
 
@@ -33,14 +36,13 @@ public class MyTankGame extends JFrame implements ActionListener {
 	private JMenuItem jMenuItem_3_1 = null;
 	private JMenuItem jMenuItem_3_2 = null;
 	private JMenuItem jMenuItem_4_1 = null;
-	public JPanel thisJpanel = null;
+	
+	public GamePanel thisJpanel = null;
 	
 	private MyStartPanel myStartPanel = null;	
 	public TankClient tc = null;
-	private GameOverPanel gameOverPanel = null;
 	private MapEditor mapEditor = null;
-	private AloneGameSetPanel aloneSetPanel = null;	
-	private ConnectShell cs;
+
 
 	private MyClient mc = null;
 	public int myTankID = 0;
@@ -70,15 +72,14 @@ public class MyTankGame extends JFrame implements ActionListener {
 		});
 				
 		this.setLocation(300, 50);
-		this.setVisible(true);
+		
 		this.setResizable(false);
 		
 		this.menu();
-		if (mc == null){
-			this.createMyStartPanel();
-		}else {
-			this.createTankClient(MyTankGame.SINGLE_GAME,"edit.tkm");
-		}
+		
+		this.createPanel(GameUI.START_PANEL);
+
+		this.setVisible(true);
 		
 	}	
 
@@ -125,111 +126,89 @@ public class MyTankGame extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("NewGame")){				
-			this.removeMyStartPanel(myStartPanel, myStartPanel);
+			thisJpanel.removePanel();
 			this.createTankClient(MyTankGame.SINGLE_GAME,"edit.tkm");
 		}
 		else if (e.getActionCommand().equals("Exit")){
 			System.exit(0);
 		}
-		else if (e.getActionCommand().equals("GameOver")){
-			this.removeMyStartPanel(myStartPanel, myStartPanel);
-			this.createGameOverPanel();
+		else if (e.getActionCommand().equals("GameOver")){		
+			this.createPanel(GameUI.END_PANEL);
 		}
 		else if (e.getActionCommand().equals("MapEditor")){
-			this.removeMyStartPanel(myStartPanel, myStartPanel);
-			this.createMapEditor();
+			this.createPanel(GameUI.MAP_EDITOR_PANEL);
 		}
 	}
 	
-	public void createMapEditor(){
+	public void lineSet(int id, MyClient mc,int tankType,boolean isMaster,String userName) {//¡¨œﬂ≈‰÷√
 		
-		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		this.myTankID = id;
+		this.mc = mc;
+		this.tankType = tankType;
+		this.isMaster = isMaster;
+		this.userName = userName;
 		
-		mapEditor = new MapEditor(this);
-		thisJpanel = mapEditor;
+	}
+	
+	public void createPanel(int panelType) {
+		
+		if (thisJpanel != null) {
+			thisJpanel.removePanel();
+		}
+		
+		switch (panelType) {
+		case GameUI.START_PANEL:		
+			MyStartPanel myStartPanel = new MyStartPanel(this);		
+			thisJpanel = myStartPanel;
+			break;
 
-		this.addMouseListener(mapEditor);
-		this.addMouseMotionListener(mapEditor);
-		this.addKeyListener(mapEditor);	
+		case GameUI.SINGLE_PANEL:
+			AloneGameSetPanel aloneSetPanel = new AloneGameSetPanel(this);
+			thisJpanel = aloneSetPanel;			
+			break;
+			
+		case GameUI.LINE_PANEL:
+			ConnectShell cs = new ConnectShell(this);
+			thisJpanel = cs;
+			break;
+			
+		case GameUI.END_PANEL:					
+			GameOverPanel gameOverPanel = new GameOverPanel(this);
+			thisJpanel = gameOverPanel;					
+			break;
+			
+		case GameUI.MAP_EDITOR_PANEL:
+					
+			mapEditor = new MapEditor(this);
+			thisJpanel = mapEditor;
+			
+			break;
+		default:
+			break;
+		}
 		
-		getContentPane().add(thisJpanel);
-		thisJpanel.setVisible(true);
-	}
-	
-	public void createMyStartPanel(){
 		
-		this.setSize(GAME_WIDTH, GAME_HEIGHT);
 		
-		getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
-		myStartPanel = new MyStartPanel(this);		
-		thisJpanel = myStartPanel;
-		this.requestFocus();
-		getContentPane().add(thisJpanel);
-		this.addMouseListener(myStartPanel);
-		this.addMouseMotionListener(myStartPanel);
 	}
-	
-	public void removeMyStartPanel(MouseListener mListener, MouseMotionListener mMotionListener){
-		this.removeMouseListener(mListener);
-		this.removeMouseMotionListener(mMotionListener);
-		this.remove(thisJpanel);
-	}
-	
+		
+
 	public void createTankClient(int gameType,String mapName){
 		
-		this.setSize(GAME_WIDTH, GAME_HEIGHT);
+		if (thisJpanel != null) {
+			thisJpanel.removePanel();
+		}
 		
-		tc = new TankClient(this, myTankID, mc, tankType, isMaster, userName, gameType);
+		tc = new TankClient(this, myTankID, mc, tankType, isMaster, userName, gameType,mapName);	
 		thisJpanel = tc;
 
-		this.addKeyListener(tc.keyListener);
-		this.requestFocus();
-		getContentPane().add(thisJpanel);
-		
-		tc.getMyTank().setId(myTankID); 
 	}
 	
-	public void removeTankClient(KeyListener keyListener){
-		this.removeKeyListener(keyListener);
-		this.remove(thisJpanel);
-	}
-	
-	public void createGameOverPanel(){
-		
-		this.setSize(GAME_WIDTH, GAME_HEIGHT);
-		
-		gameOverPanel = new GameOverPanel(this);
-		thisJpanel = gameOverPanel;
-		this.requestFocus();
-		getContentPane().add(thisJpanel);
-		this.addKeyListener(gameOverPanel);			
-	}
-	
-	public void removeGameOverPanel(KeyListener keyListener){
-		this.removeKeyListener(keyListener);
-		this.remove(thisJpanel);
-	}
 
-	public void createAloneGameSetPanel() {
-		aloneSetPanel = new AloneGameSetPanel(this);
-		thisJpanel = aloneSetPanel;
-		getContentPane().add(thisJpanel);
+	public GamePanel getNowPanel() {
+		return thisJpanel;
+	}
+	
 
-	}
-	
-	public void removeAloneGameSetPanel(){
-		this.remove(thisJpanel);
-	}
-	
-	public void createConnectShell() {
-		cs = new ConnectShell();
-		thisJpanel = cs;
-		getContentPane().add(thisJpanel);
-		
-	}
-	public void removeConnectShell() {
-		this.remove(thisJpanel);
-	}
 
 
 }

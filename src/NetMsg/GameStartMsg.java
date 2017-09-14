@@ -67,18 +67,7 @@ public class GameStartMsg implements Msg{
 			System.out.println(mc.getId());
 			
 			mc.startGame();
-//			if (msgId == 0 && mc.isMaster()) {
-//				
-//				mc.startGame();
-//				
-//				Msg msg = new GameStartMsg(mc.getId());
-//				mc.send(msg);
-//				
-//			}else {
-//				if (msgId == mc.getId()) return 0;
-//				mc.startGame();
-//			}
-//			
+	
 					
 		} catch (IOException e) {
 			e.printStackTrace();

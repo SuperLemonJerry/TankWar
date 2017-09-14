@@ -25,7 +25,6 @@ import javax.swing.JTextField;
 
 import NetMsg.GameStartMsg;
 import NetMsg.LiveMsg;
-import NetMsg.MissileDeadMsg;
 import NetMsg.Msg;
 
 public class TankServer extends JPanel{
@@ -40,7 +39,7 @@ public class TankServer extends JPanel{
 	private ServerSocket server;
 	private ArrayList<Client> clients = new ArrayList<Client>();
 	private static int TankID = 100;
-//	private List listUsers;	
+	
 	private int udpPort;//转发端口<区别：转发不解包，广播解包>
 	private int serverPort;//广播反馈端口
 	

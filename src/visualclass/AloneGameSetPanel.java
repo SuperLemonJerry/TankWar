@@ -18,25 +18,22 @@ import dataclass.Rivers;
 import dataclass.Wall;
 
 
-public class AloneGameSetPanel extends JPanel{
+public class AloneGameSetPanel extends GamePanel{
 	
-	private MyTankGame myTankGame = null;
+
 	private JCheckBox check_p2;
 	private JComboBox<String> mapsCombox;
 	
 	
 	public AloneGameSetPanel(MyTankGame myTankGame){
-		this.myTankGame = myTankGame;
+		super(myTankGame);
+		this.panelType = GameUI.SINGLE_PANEL;
 		
-		this.setLayout(null);
-		this.setSize(800, 600);
-		
+		this.createPanel();
 		
 		new Thread(new PaintThread(this)).start();
 		
-		this.launch();
-		
-		this.setVisible(true);
+
 	}
 	
 	public void launch() {
@@ -98,12 +95,12 @@ public class AloneGameSetPanel extends JPanel{
 			String mapName = (String)mapsCombox.getSelectedItem();
 
 			if (e.getActionCommand().equals("startgame")) {
-							
+				
 				if (!check_p2.isSelected()) {
-					myTankGame.removeAloneGameSetPanel();
+					myTankGame.getNowPanel().removePanel();
 					myTankGame.createTankClient(MyTankGame.SINGLE_GAME,mapName);
 				}else {
-					myTankGame.removeAloneGameSetPanel();
+					myTankGame.getNowPanel().removePanel();
 					myTankGame.createTankClient(MyTankGame.DOUBLE_GAME,mapName);
 				}
 				
@@ -111,6 +108,27 @@ public class AloneGameSetPanel extends JPanel{
 			}
 
 		}
+		
+	}
+
+	@Override
+	public void createPanel() {
+		
+		
+		this.setLayout(null);
+		this.setSize(800, 600);
+	
+		this.launch();
+		
+		this.setVisible(true);
+		
+		myTankGame.add(this);	
+		
+	}
+
+	@Override
+	public void removePanel() {
+		myTankGame.remove(this);
 		
 	}
 

@@ -9,24 +9,50 @@ import TankClients.MyTankGame;
 import TankClients.PaintThread;
 
 
-public class MyStartPanel extends JPanel implements MouseListener, MouseMotionListener{
+public class MyStartPanel extends GamePanel implements MouseListener, MouseMotionListener{
 	
 	private int mouseX;
 	private int mouseY;
-	private MyTankGame myTankGame = null;
 	private boolean mouseOnSingleGame = false;
 	private boolean mouseOnDoubleGame = false;
 	private boolean mouseOnDraftMode = false;
 	
+	
 	public MyStartPanel(MyTankGame myTankGame){
-		this.myTankGame = myTankGame;
+		super(myTankGame);	
+		this.panelType =  GameUI.START_PANEL;
 		
-		this.setBackground(Color.BLACK);		
-		this.setSize(800, 600);
-		this.setVisible(true);
+		this.createPanel();
 		
 		new Thread(new PaintThread(this)).start();
 	}
+	
+	@Override
+	public void createPanel() {
+		
+		this.setBackground(Color.BLACK);		
+		this.setSize(800, 600);
+		
+				
+		myTankGame.setSize(MyTankGame.GAME_WIDTH, MyTankGame.GAME_HEIGHT);
+		myTankGame.requestFocus();
+		myTankGame.add(this);
+		myTankGame.addMouseListener(this);
+		myTankGame.addMouseMotionListener(this);
+		
+		this.setVisible(true);
+	}
+
+	@Override
+	public void removePanel() {
+		
+		myTankGame.removeMouseListener(this);
+		myTankGame.removeMouseMotionListener(this);
+		myTankGame.remove(this);
+
+		
+	}
+	
 	
 	@Override
 	public void paint(Graphics g){
@@ -100,14 +126,12 @@ public class MyStartPanel extends JPanel implements MouseListener, MouseMotionLi
 		mouseY = e.getY() - 50;	
 		
 		switch(this.contaninsSite(mouseX, mouseY)){
-			case 1:
-				myTankGame.removeMyStartPanel(this, this);
-				myTankGame.createAloneGameSetPanel();
+			case 1:				
+				myTankGame.createPanel(GameUI.SINGLE_PANEL);
 				break;
 				
 			case 2:
-				myTankGame.removeMyStartPanel(this, this);
-				myTankGame.createConnectShell();
+				myTankGame.createPanel(GameUI.LINE_PANEL);
 
 				
 		
@@ -163,4 +187,14 @@ public class MyStartPanel extends JPanel implements MouseListener, MouseMotionLi
 	public void mouseDragged(MouseEvent e) {
 			
 	}
+
+	public int getPanelType() {
+		return panelType;
+	}
+
+	public void setPanelType(int panelType) {
+		this.panelType = panelType;
+	}
+
+
 }

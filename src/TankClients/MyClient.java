@@ -51,8 +51,10 @@ public class MyClient {
 	}
 
 
-	public MyClient(DatagramSocket ds,int id,String userName,int tankTypr,boolean isMaster,String TCP_IP,int TCP_PORT,int TCP_PORT2) {
+	public MyClient(MyTankGame myTankGame, DatagramSocket ds,int id,String userName,int tankTypr,boolean isMaster,String TCP_IP,int TCP_PORT,int TCP_PORT2) {
 		this(null,ds,isMaster);
+		
+		this.myTankGame = myTankGame;
 		this.id = id;
 		this.userName = userName;
 		this.tankType = tankTypr;
@@ -65,11 +67,9 @@ public class MyClient {
 	
 	
 	public void startGame() {
-			
-		myTankGame = new MyTankGame(id,this,tankType,isMaster,userName);
-//		
-//		TankNewMsg tankNewMsg = new TankNewMsg(myTankGame.tc.getMyTank());
-//		send(tankNewMsg);
+		
+		myTankGame.lineSet(id, this, tankType, isMaster, userName);		
+		myTankGame.createTankClient(MyTankGame.SINGLE_GAME,"edit.tkm");
 		
 	}
 	

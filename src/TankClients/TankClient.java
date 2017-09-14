@@ -26,8 +26,10 @@ import dataclass.Missile;
 import dataclass.Rivers;
 import dataclass.Wall;
 import visualclass.ConnectShell;
+import visualclass.GamePanel;
+import visualclass.GameUI;
 
-public class TankClient extends JPanel {
+public class TankClient extends GamePanel {
 
 	public static final int GAME_WIDTH = 810;
 	public static final int GAME_HEIGHT = 600;
@@ -36,7 +38,6 @@ public class TankClient extends JPanel {
 	private PlayerTank play2 = null;
 	private Image offScreenImage = null;
 	public KeyListener keyListener = null;
-	public MyTankGame myTankGame = null;
 	private Blood blood = new Blood();
 	private Base base = new Base(360, 540, 1, 1, this);
 	private MyClient mc = null;
@@ -57,11 +58,15 @@ public class TankClient extends JPanel {
 	public String userName;
 	private int gameType;
 	private int enemyCount = 3;
+	private String mapName;
 
 	public TankClient(MyTankGame myTankGame, int myTankID, MyClient mc,
-			int tankType, boolean isMaster, String userName, int gameType) {
+			int tankType, boolean isMaster, String userName, int gameType,String mapName) {
 
-		this.myTankGame = myTankGame;
+		super(myTankGame);
+		this.panelType = GameUI.TANK_GAME_PANEL;
+		
+		this.mapName = mapName;
 		this.setMyTankID(myTankID);
 		this.mc = mc;
 		this.tankType = tankType;
@@ -69,11 +74,8 @@ public class TankClient extends JPanel {
 		this.userName = userName;
 		this.gameType = gameType;
 
-		this.setSize(GAME_WIDTH, GAME_HEIGHT);
-		this.setBackground(Color.ORANGE);
-		keyListener = new KeyMonitor();
-		this.addKeyListener(keyListener);
-		this.setVisible(true);
+		this.createPanel();
+		
 
 		new Thread(new PaintThread(this)).start();
 
@@ -180,8 +182,8 @@ public class TankClient extends JPanel {
 		 }
 
 		if (!base.isLive() || PlayerTank.isGameOver()) {
-			myTankGame.removeTankClient(this.keyListener);
-			myTankGame.createGameOverPanel();
+			myTankGame.getNowPanel().removePanel();
+			myTankGame.createPanel(GameUI.END_PANEL);
 		}
 
 		for (int i = 0; i < missiles.size(); i++) {
@@ -273,10 +275,15 @@ public class TankClient extends JPanel {
 	}
 
 	public void loadMap() {
+		
+		if (mapName == null) {
+			mapName = "edit.tkm";
+		}
+		
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(new File("src" + File.separator + "maps"
-					+ File.separator + "edit.tkm"));
+					+ File.separator + mapName));
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found!");
 		}
@@ -359,6 +366,30 @@ public class TankClient extends JPanel {
 				play2.keyReleased(e);
 			}
 		}
+	}
+
+	@Override
+	public void createPanel() {
+		
+		this.setSize(GAME_WIDTH, GAME_HEIGHT);
+		this.setBackground(Color.ORANGE);
+		keyListener = new KeyMonitor();
+//		this.addKeyListener(keyListener);
+		
+		
+//		myTankGame.setSize(GAME_WIDTH, GAME_HEIGHT);
+		myTankGame.addKeyListener(this.keyListener);
+		myTankGame.requestFocus();
+		
+		this.setVisible(true);
+		myTankGame.add(this);	
+	}
+
+	@Override
+	public void removePanel() {
+		myTankGame.removeKeyListener(this.keyListener);
+		myTankGame.remove(this);
+		
 	}
 
 }

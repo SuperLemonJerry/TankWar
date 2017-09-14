@@ -13,15 +13,14 @@ import TankClients.MyTankGame;
 import TankClients.PaintThread;
 
 
-public class GameOverPanel extends JPanel implements KeyListener{
-	private MyTankGame myTankGame = null;
-
+public class GameOverPanel extends GamePanel implements KeyListener{
+	
 	public GameOverPanel(MyTankGame myTankGame) {
-		this.myTankGame = myTankGame;
+		super(myTankGame);
+		this.panelType = GameUI.END_PANEL;
 		
-		this.setBackground(Color.BLACK);		
-		this.setSize(MyTankGame.GAME_WIDTH, MyTankGame.GAME_HEIGHT);
-		this.setVisible(true);
+		this.createPanel();
+
 		new Thread(new PaintThread(this)).start();
 	}
 	
@@ -40,8 +39,8 @@ public class GameOverPanel extends JPanel implements KeyListener{
 	public void keyPressed(KeyEvent e){
 		if (e.getKeyCode() == KeyEvent.VK_ENTER){
 	
-			myTankGame.removeGameOverPanel(this);
-			myTankGame.createMyStartPanel();	
+			myTankGame.getNowPanel().removePanel();
+			myTankGame.createPanel(GameUI.START_PANEL);	
 		}
 	}
 
@@ -50,5 +49,25 @@ public class GameOverPanel extends JPanel implements KeyListener{
 
 	@Override
 	public void keyReleased(KeyEvent e) {}
+
+	@Override
+	public void createPanel() {
+		this.setBackground(Color.BLACK);		
+		this.setSize(MyTankGame.GAME_WIDTH, MyTankGame.GAME_HEIGHT);
+			
+		myTankGame.requestFocus();
+		myTankGame.add(this);
+		myTankGame.addKeyListener(this);	
+		
+		this.setVisible(true);
+		
+	}
+
+	@Override
+	public void removePanel() {
+		myTankGame.removeKeyListener(this);
+		myTankGame.remove(this);
+		
+	}
 	
 }

@@ -251,6 +251,7 @@ public class Tank extends GameObject {
 	public boolean collidesWithBarrier(Barrier barrier) {
 		if (this.live && barrier.collidesWithTank(this)) {
 			this.stay();
+			
 			return true;
 		}
 		return false;
