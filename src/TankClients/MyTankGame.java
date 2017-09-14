@@ -4,8 +4,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-import visualclass.AloneGameSetPanel;
-import visualclass.ConnectShell;
+import visualclass.SinglePanel;
+import visualclass.LineGamePanel;
 import visualclass.GameOverPanel;
 import visualclass.GamePanel;
 import visualclass.GameUI;
@@ -163,12 +163,12 @@ public class MyTankGame extends JFrame implements ActionListener {
 			break;
 
 		case GameUI.SINGLE_PANEL:
-			AloneGameSetPanel aloneSetPanel = new AloneGameSetPanel(this);
+			SinglePanel aloneSetPanel = new SinglePanel(this);
 			thisJpanel = aloneSetPanel;			
 			break;
 			
 		case GameUI.LINE_PANEL:
-			ConnectShell cs = new ConnectShell(this);
+			LineGamePanel cs = new LineGamePanel(this);
 			thisJpanel = cs;
 			break;
 			

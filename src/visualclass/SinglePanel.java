@@ -18,14 +18,14 @@ import dataclass.Rivers;
 import dataclass.Wall;
 
 
-public class AloneGameSetPanel extends GamePanel{
+public class SinglePanel extends GamePanel{
 	
 
 	private JCheckBox check_p2;
 	private JComboBox<String> mapsCombox;
 	
 	
-	public AloneGameSetPanel(MyTankGame myTankGame){
+	public SinglePanel(MyTankGame myTankGame){
 		super(myTankGame);
 		this.panelType = GameUI.SINGLE_PANEL;
 		

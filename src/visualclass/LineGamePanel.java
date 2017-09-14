@@ -24,7 +24,7 @@ import TankClients.MyTankGame;
 import TankClients.PaintThread;
 import TankClients.Tank;
 
-public class ConnectShell extends GamePanel {
+public class LineGamePanel extends GamePanel {
 
 	private JTextField textIP;
 	private JTextArea textArea;
@@ -59,7 +59,7 @@ public class ConnectShell extends GamePanel {
 	// jf.setLocation(300, 50);
 	// }
 
-	public ConnectShell(MyTankGame myTankGame) {
+	public LineGamePanel(MyTankGame myTankGame) {
 
 		super(myTankGame);
 		this.panelType = GameUI.LINE_PANEL;

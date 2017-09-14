@@ -8,7 +8,7 @@ import java.net.DatagramSocket;
 import java.util.ArrayList;
 
 import NetMsg.*;
-import visualclass.ConnectShell;
+import visualclass.LineGamePanel;
 import visualclass.MyStartPanel;
 
 public class MyClient {

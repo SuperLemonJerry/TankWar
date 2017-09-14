@@ -25,7 +25,7 @@ import dataclass.Forest;
 import dataclass.Missile;
 import dataclass.Rivers;
 import dataclass.Wall;
-import visualclass.ConnectShell;
+import visualclass.LineGamePanel;
 import visualclass.GamePanel;
 import visualclass.GameUI;
 
