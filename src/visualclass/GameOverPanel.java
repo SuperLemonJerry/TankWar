@@ -34,6 +34,7 @@ public class GameOverPanel extends GamePanel implements KeyListener{
 		g.setFont(font);
 		g.drawString("Game Over", 140, 250);
 		g.setColor(c);
+		
 	}
 	
 	public void keyPressed(KeyEvent e){
